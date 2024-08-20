@@ -18,4 +18,15 @@ export class EmployeeService {
     await this.employeeRepository.save(employee);
     return employee;
   }
+
+  findAll(department?: string): Promise<Employee[]> {
+    if (department) {
+      return this.employeeRepository.find({ where: { department } });
+    }
+    return this.employeeRepository.find();
+  }
+
+  findOne(id: number): Promise<Employee> {
+    return this.employeeRepository.findOne({ where: { id } });
+  }
 }
