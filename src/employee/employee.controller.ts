@@ -30,4 +30,17 @@ export class EmployeeController {
   findOne(@Param('id') id: string) {
     return this.employeeService.findOne(+id);
   }
+
+  @Put(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateEmployeeDto: UpdateEmployeeDto,
+  ) {
+    return this.employeeService.update(+id, updateEmployeeDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.employeeService.remove(+id);
+  }
 }
