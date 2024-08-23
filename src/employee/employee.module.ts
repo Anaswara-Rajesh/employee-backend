@@ -9,5 +9,6 @@ import { MailService } from '../mail/mail.service';
   imports: [TypeOrmModule.forFeature([Employee])],
   providers: [EmployeeService, MailService],
   controllers: [EmployeeController],
+  exports: [EmployeeService, ]
 })
 export class EmployeeModule {}

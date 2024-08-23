@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import * as bcrypt from 'bcrypt';
 import { Employee } from './entity/employee.entity';
@@ -28,10 +28,20 @@ export class EmployeeService {
   }
 
   findAll(department?: string): Promise<Employee[]> {
+    const query: any = {
+      where: {
+        role: Not('admin'),
+      },
+    };
+
     if (department) {
-      return this.employeeRepository.find({ where: { department } });
+      query.where = {
+        ...query.where,
+        department,
+      };
     }
-    return this.employeeRepository.find();
+
+    return this.employeeRepository.find(query);
   }
 
   findOne(id: number): Promise<Employee> {
@@ -50,5 +60,28 @@ export class EmployeeService {
 
   async remove(id: number): Promise<void> {
     return this.employeeRepository.delete(id).then(() => undefined);
+  }
+
+  async findByUsernameOrEmail(
+    usernameOrEmail: string,
+  ): Promise<Employee | undefined> {
+    return this.employeeRepository.findOne({
+      where: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+    });
+  }
+
+  async findByUserByUserName(
+    username: string,
+  ): Promise<Employee | undefined> {
+    return this.employeeRepository.findOne({
+      where: [{ username: username }],
+    });
+  }
+
+  async uploadProfilePicture(id: number, profilePicture: string): Promise<Employee> {
+    console.log(id, profilePicture, "data");
+    
+    await this.employeeRepository.update(id, { profilePicture });
+    return this.findOne(id);
   }
 }

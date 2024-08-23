@@ -17,6 +17,9 @@ export class Employee {
   @Column()
   department: string;
 
+  @Column()
+  role: string;
+
   @Column({ unique: true })
   email: string;
 
